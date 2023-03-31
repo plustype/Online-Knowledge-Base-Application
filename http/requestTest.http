@@ -1,0 +1,21 @@
+GET http://localhost:8080/hello
+Accept: application/json
+
+//Test
+> {%
+ client.test("test-hello", function () {
+     client.log("Test/hello API");
+     client.log(response.body);
+     client.log(JSON.stringify(response.body));
+     client.assert(response.status === 200, "Response status is not 200");
+     client.assert(response.body === "Hello World", "Verification failed")
+ });
+ %}
+###
+
+POST http://127.0.0.1:8080/hello/post
+Content-Type: application/x-www-form-urlencoded
+
+name=赵昱
+
+###
