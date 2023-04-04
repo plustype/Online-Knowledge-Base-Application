@@ -31,3 +31,5 @@ create table `ebook` (
     `like_count` int,
     primary key (`id`)
 ) engine = innodb default charset = utf8mb4;
+
+insert into `ebook` (id, name, description) values (1, 'Head First Java', 'A Brain-Friendly Guide');
