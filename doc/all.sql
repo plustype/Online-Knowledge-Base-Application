@@ -16,3 +16,18 @@ create table `demo` (
 ) engine=innodb default charset=utf8mb4 comment='demo'
 
 insert into `demo` (id, name) VALUES (1, 'test');
+
+# ebook table
+drop table if exists `ebook`;
+create table `ebook` (
+    `id` bigint not null,
+    `name` varchar(50),
+    `category_1` bigint,
+    `category_2` bigint,
+    `description` varchar(200),
+    `cover` varchar(200),
+    `chapter_count` int,
+    `view_count` int,
+    `like_count` int,
+    primary key (`id`)
+) engine = innodb default charset = utf8mb4;

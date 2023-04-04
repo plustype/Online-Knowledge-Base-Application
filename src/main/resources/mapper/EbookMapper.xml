@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.steven.wiki.mapper.EbookMapper">
+  <resultMap id="BaseResultMap" type="com.steven.wiki.domain.Ebook">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="category_1" jdbcType="BIGINT" property="category1" />
+    <result column="category_2" jdbcType="BIGINT" property="category2" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="cover" jdbcType="VARCHAR" property="cover" />
+    <result column="chapter_count" jdbcType="INTEGER" property="chapterCount" />
+    <result column="view_count" jdbcType="INTEGER" property="viewCount" />
+    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, `name`, category_1, category_2, description, cover, chapter_count, view_count, 
+    like_count
+  </sql>
+  <select id="selectByExample" parameterType="com.steven.wiki.domain.EbookExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ebook
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ebook
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from ebook
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.steven.wiki.domain.EbookExample">
+    delete from ebook
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.steven.wiki.domain.Ebook">
+    insert into ebook (id, `name`, category_1, 
+      category_2, description, cover, 
+      chapter_count, view_count, like_count
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{category1,jdbcType=BIGINT}, 
+      #{category2,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR}, #{cover,jdbcType=VARCHAR}, 
+      #{chapterCount,jdbcType=INTEGER}, #{viewCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.steven.wiki.domain.Ebook">
+    insert into ebook
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="category1 != null">
+        category_1,
+      </if>
+      <if test="category2 != null">
+        category_2,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="cover != null">
+        cover,
+      </if>
+      <if test="chapterCount != null">
+        chapter_count,
+      </if>
+      <if test="viewCount != null">
+        view_count,
+      </if>
+      <if test="likeCount != null">
+        like_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="category1 != null">
+        #{category1,jdbcType=BIGINT},
+      </if>
+      <if test="category2 != null">
+        #{category2,jdbcType=BIGINT},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="cover != null">
+        #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="chapterCount != null">
+        #{chapterCount,jdbcType=INTEGER},
+      </if>
+      <if test="viewCount != null">
+        #{viewCount,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        #{likeCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.steven.wiki.domain.EbookExample" resultType="java.lang.Long">
+    select count(*) from ebook
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ebook
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.name != null">
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.category1 != null">
+        category_1 = #{record.category1,jdbcType=BIGINT},
+      </if>
+      <if test="record.category2 != null">
+        category_2 = #{record.category2,jdbcType=BIGINT},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cover != null">
+        cover = #{record.cover,jdbcType=VARCHAR},
+      </if>
+      <if test="record.chapterCount != null">
+        chapter_count = #{record.chapterCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.viewCount != null">
+        view_count = #{record.viewCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.likeCount != null">
+        like_count = #{record.likeCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ebook
+    set id = #{record.id,jdbcType=BIGINT},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      category_1 = #{record.category1,jdbcType=BIGINT},
+      category_2 = #{record.category2,jdbcType=BIGINT},
+      description = #{record.description,jdbcType=VARCHAR},
+      cover = #{record.cover,jdbcType=VARCHAR},
+      chapter_count = #{record.chapterCount,jdbcType=INTEGER},
+      view_count = #{record.viewCount,jdbcType=INTEGER},
+      like_count = #{record.likeCount,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.steven.wiki.domain.Ebook">
+    update ebook
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="category1 != null">
+        category_1 = #{category1,jdbcType=BIGINT},
+      </if>
+      <if test="category2 != null">
+        category_2 = #{category2,jdbcType=BIGINT},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="cover != null">
+        cover = #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="chapterCount != null">
+        chapter_count = #{chapterCount,jdbcType=INTEGER},
+      </if>
+      <if test="viewCount != null">
+        view_count = #{viewCount,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        like_count = #{likeCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.steven.wiki.domain.Ebook">
+    update ebook
+    set `name` = #{name,jdbcType=VARCHAR},
+      category_1 = #{category1,jdbcType=BIGINT},
+      category_2 = #{category2,jdbcType=BIGINT},
+      description = #{description,jdbcType=VARCHAR},
+      cover = #{cover,jdbcType=VARCHAR},
+      chapter_count = #{chapterCount,jdbcType=INTEGER},
+      view_count = #{viewCount,jdbcType=INTEGER},
+      like_count = #{likeCount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
