@@ -1,7 +1,8 @@
 package com.steven.wiki.controller;
 
-import com.steven.wiki.domain.Ebook;
+import com.steven.wiki.request.EbookReq;
 import com.steven.wiki.response.CommonResp;
+import com.steven.wiki.response.EbookResp;
 import com.steven.wiki.service.EbookService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +19,9 @@ public class EbookController {
     private EbookService ebookService;
 
     @GetMapping("/list")
-    public CommonResp list() {
-        CommonResp<List<Ebook>> resp = new CommonResp<>();
-        List<Ebook> list = ebookService.list();
+    public CommonResp list(EbookReq req) {
+        CommonResp<List<EbookResp>> resp = new CommonResp<>();
+        List<EbookResp> list = ebookService.list(req);
         resp.setContent(list);
         return resp;
     }
