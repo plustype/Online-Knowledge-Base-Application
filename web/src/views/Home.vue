@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <a-button type="primary" danger>Primary</a-button>
+    <a-button size="small">Normal</a-button>
+    <a-radio-button size="small">Large</a-radio-button>
     <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
   </div>
