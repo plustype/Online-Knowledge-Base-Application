@@ -7,6 +7,7 @@ import com.steven.wiki.response.EbookResp;
 import com.steven.wiki.utils.CopyUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class EbookService {
         //fix, create criteria(where in sql); 固定写法，创建criteria变量（相当于sql中的where条件）
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
-        criteria.andNameLike("%" + req.getName() + "%");
+        if (!ObjectUtils.isEmpty(req.getName()))    //if req.name is not empty, add below constrain into sql
+            criteria.andNameLike("%" + req.getName() + "%");
 
         var ebookList = ebookMapper.selectByExample(ebookExample);
         

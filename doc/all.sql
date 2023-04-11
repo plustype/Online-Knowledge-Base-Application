@@ -34,3 +34,5 @@ create table `ebook` (
 
 insert into `ebook` (id, name, description) values (1, 'Head First Java', 'A Brain-Friendly Guide');
 insert into `ebook` (id, name, description) values (2, 'Java Advance', 'The advance topics for Java application');
+insert into `ebook` (id, name, description) values (3, 'Spring Boot Basic', 'Learn Spring Boot with zero experience');
+insert into `ebook` (id, name, description) values (4, 'Data Analysis', 'Learn data analysis with Python');
