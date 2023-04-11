@@ -97,7 +97,6 @@ export default defineComponent({
     HelloWorld,
   },
   setup() { //setup 就放一些参数定义，方法定义
-    console.log("setup");
     const ebooks = ref(); //定义响应式数据变量，变化实时响应到界面
     const ebooks1 = reactive({books: []}); //books是自己定义的属性，属性值用来放电子书列表
     const pagination = {
@@ -113,12 +112,10 @@ export default defineComponent({
     ];
 
     onMounted(() => {   //生命周期函数
-      console.log("onMounted");
       axios.get("/ebook/list").then((response) => {  //初始化逻辑都写到onMounted方法里
         const data = response.data;
         ebooks.value = data.content;
         ebooks1.books = data.content;
-        console.log(response);
       })
     });
 
