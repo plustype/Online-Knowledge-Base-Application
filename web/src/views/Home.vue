@@ -114,7 +114,7 @@ export default defineComponent({
 
     onMounted(() => {   //生命周期函数
       console.log("onMounted");
-      axios.get(process.env.VUE_APP_SERVER + "/ebook/list").then((response) => {  //初始化逻辑都写到onMounted方法里
+      axios.get("/ebook/list").then((response) => {  //初始化逻辑都写到onMounted方法里
         const data = response.data;
         ebooks.value = data.content;
         ebooks1.books = data.content;
