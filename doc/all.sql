@@ -33,3 +33,4 @@ create table `ebook` (
 ) engine = innodb default charset = utf8mb4;
 
 insert into `ebook` (id, name, description) values (1, 'Head First Java', 'A Brain-Friendly Guide');
+insert into `ebook` (id, name, description) values (2, 'Java Advance', 'The advance topics for Java application');
