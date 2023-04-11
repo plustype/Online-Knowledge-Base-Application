@@ -48,13 +48,16 @@
     <a-layout-content
       :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
   >
-    Content
+      <pre>
+        {{ebooks}}  <!--使用{{xxx}}来获取变量 -->
+        {{ebooks2}}
+      </pre>
   </a-layout-content>
   </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 import axios from 'axios';
 
@@ -63,11 +66,25 @@ export default defineComponent({
   components: {
     HelloWorld,
   },
-  setup() {
+  setup() { //setup 就放一些参数定义，方法定义
     console.log("setup");
-    axios.get("http://localhost:8081/ebook/list?name=java").then(function (response) {
-      console.log(response);
-    })
+    const ebooks = ref(); //定义响应式数据变量，变化实时响应到界面
+    const ebooks1 = reactive({books: []}); //books是自己定义的属性，属性值用来放电子书列表
+
+    onMounted(() => {   //生命周期函数
+      console.log("onMounted");
+      axios.get("http://localhost:8081/ebook/list?name=java").then((response) => {  //初始化逻辑都写到onMounted方法里
+        const data = response.data;
+        ebooks.value = data.content;
+        ebooks1.books = data.content;
+        console.log(response);
+      })
+    });
+
+    return {
+      ebooks,  //html代码要拿到响应式变量，需要在setup最后return
+      ebooks2: toRef(ebooks1, "books") //将ebooks1里面的books属性编程响应式变量
+    }
   }
 });
 </script>
