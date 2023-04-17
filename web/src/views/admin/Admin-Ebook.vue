@@ -12,7 +12,7 @@
           @change="handleTableChange"
       >
         <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover" alt="avatar" />
+          <img v-if="cover" :src="cover" alt="avatar" width="50" height="50"/>
         </template>
 <!--        <template v-slot:category="{ text, record }">-->
 <!--          <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>-->
@@ -25,7 +25,7 @@
 <!--              </a-button>-->
 <!--            </router-link>-->
             <a-button type="primary" @click="edit(record)">
-              编辑
+              Edit
             </a-button>
 <!--            <a-popconfirm-->
 <!--                title="删除后不可恢复，确认删除?"-->
@@ -34,7 +34,7 @@
 <!--                @confirm="handleDelete(record.id)"-->
 <!--            >-->
               <a-button type="danger">
-                删除
+                Delete
               </a-button>
 <!--            </a-popconfirm>-->
           </a-space>
