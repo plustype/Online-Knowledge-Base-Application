@@ -12,7 +12,7 @@
           @change="handleTableChange"
       >
         <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover" alt="avatar" />
+          <img v-if="cover" :src="cover" alt="avatar" width="50" height="50" />
         </template>
 <!--        <template v-slot:category="{ text, record }">-->
 <!--          <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>-->
@@ -109,7 +109,7 @@ export default defineComponent({
         ebooks.value = data.content;
 
         //重置分页按钮
-        pagination.value.current = params.page;
+         pagination.value.current = params.page;
       });
     }
 
