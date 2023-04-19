@@ -1,11 +1,17 @@
 package com.steven.wiki.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.steven.wiki.domain.Ebook;
 import com.steven.wiki.domain.EbookExample;
 import com.steven.wiki.mapper.EbookMapper;
 import com.steven.wiki.request.EbookReq;
 import com.steven.wiki.response.EbookResp;
+import com.steven.wiki.response.PageResp;
 import com.steven.wiki.utils.CopyUtil;
 import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -14,18 +20,27 @@ import java.util.List;
 @Service
 public class EbookService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
+
     @Resource
     private EbookMapper ebookMapper;
 
-    public List<EbookResp> list(EbookReq req) {
+    public PageResp<EbookResp> list(EbookReq req) {
 
         //fix, create criteria(where in sql); 固定写法，创建criteria变量（相当于sql中的where条件）
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName()))    //if req.name is not empty, add below constrain into sql
+        {
             criteria.andNameLike("%" + req.getName() + "%");
+        }
 
+        PageHelper.startPage(req.getPage(), req.getSize());
         var ebookList = ebookMapper.selectByExample(ebookExample);
+
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
+        LOG.info("总行数：{}", pageInfo.getTotal());
+        LOG.info("总页数：{}", pageInfo.getPages());
         
         /*
         transfer properties to EbookResp; 将值传给封装的返回值类
@@ -37,7 +52,13 @@ public class EbookService {
 //            respList.add(ebookResp);
 //        }
 
-        return CopyUtil.copyList(ebookList, EbookResp.class); //copy list value
+        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class); //copy list value
+
+        PageResp<EbookResp> pageResp = new PageResp<>();
+        pageResp.setTotal(pageInfo.getTotal());
+        pageResp.setList(list);
+
+        return pageResp;
     }
 
 }
