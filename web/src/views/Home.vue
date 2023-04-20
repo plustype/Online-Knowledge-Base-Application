@@ -77,19 +77,19 @@ import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 import axios from 'axios';
 
-const listData: Record<string, string>[] = [];
-
-for (let i = 0; i < 23; i++) {
-  listData.push({
-    href: 'https://www.antdv.com/',
-    title: `ant design vue part ${i}`,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    description:
-        'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-        'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  });
-}
+// const listData: Record<string, string>[] = [];
+//
+// for (let i = 0; i < 23; i++) {
+//   listData.push({
+//     href: 'https://www.antdv.com/',
+//     title: `ant design vue part ${i}`,
+//     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+//     description:
+//         'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+//     content:
+//         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+//   });
+// }
 
 export default defineComponent({
   name: 'Home',
@@ -99,12 +99,12 @@ export default defineComponent({
   setup() { //setup 就放一些参数定义，方法定义
     const ebooks = ref(); //定义响应式数据变量，变化实时响应到界面
     const ebooks1 = reactive({books: []}); //books是自己定义的属性，属性值用来放电子书列表
-    const pagination = {
-      onChange: (page: number) => {
-        console.log(page);
-      },
-      pageSize: 3,
-    };
+    // const pagination = {
+    //   onChange: (page: number) => {
+    //     console.log(page);
+    //   },
+    //   pageSize: 3,
+    // };
     const actions: Record<string, string>[] = [
       { type: 'StarOutlined', text: '156' },
       { type: 'LikeOutlined', text: '156' },
@@ -112,18 +112,18 @@ export default defineComponent({
     ];
 
     onMounted(() => {   //生命周期函数
-      axios.get("/ebook/list").then((response) => {  //初始化逻辑都写到onMounted方法里
+      axios.get("/ebook/all").then((response) => {  //初始化逻辑都写到onMounted方法里
         const data = response.data;
         ebooks.value = data.content;
-        ebooks1.books = data.content;
+        //ebooks1.books = data.content;
       })
     });
 
     return {
       ebooks,  //html代码要拿到响应式变量，需要在setup最后return
-      ebooks2: toRef(ebooks1, "books"), //将ebooks1里面的books属性编程响应式变量
-      listData,
-      pagination,
+      //ebooks2: toRef(ebooks1, "books"), //将ebooks1里面的books属性编程响应式变量
+      //listData,
+      //pagination,
       actions,
     }
   }

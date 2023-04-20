@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/ebook")  //put common path before class to apply to all requests
 public class EbookController {
@@ -22,6 +24,14 @@ public class EbookController {
         CommonResp<PageResp<EbookResp>> resp = new CommonResp<>();
         PageResp<EbookResp> list = ebookService.list(req);
         resp.setContent(list);
+        return resp;
+    }
+
+    @GetMapping("/all")
+    public CommonResp all() {
+        CommonResp<List<EbookResp>> resp = new CommonResp<>();
+        List<EbookResp> all = ebookService.all();
+        resp.setContent(all);
         return resp;
     }
 }

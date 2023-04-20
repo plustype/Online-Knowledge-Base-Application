@@ -61,4 +61,33 @@ public class EbookService {
         return pageResp;
     }
 
+    public List<EbookResp> all() {
+
+        //fix, create criteria(where in sql); 固定写法，创建criteria变量（相当于sql中的where条件）
+        EbookExample ebookExample = new EbookExample();
+        EbookExample.Criteria criteria = ebookExample.createCriteria();
+//        if (!ObjectUtils.isEmpty(req.getName()))    //if req.name is not empty, add below constrain into sql
+//        {
+//            criteria.andNameLike("%" + req.getName() + "%");
+//        }
+
+        var ebookList = ebookMapper.selectByExample(ebookExample);
+
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
+        LOG.info("总行数：{}", pageInfo.getTotal());
+        LOG.info("总页数：{}", pageInfo.getPages());
+
+        /*
+        transfer properties to EbookResp; 将值传给封装的返回值类
+         */
+//        List<EbookResp> respList = new ArrayList<>();
+//        for (Ebook ebook : ebookList) {
+//            EbookResp ebookResp = new EbookResp();
+//            BeanUtils.copyProperties(ebook, ebookResp);
+//            respList.add(ebookResp);
+//        }
+
+         return CopyUtil.copyList(ebookList, EbookResp.class); //copy list value
+    }
+
 }
