@@ -48,7 +48,23 @@
       :confirm-loading="modalLoading"
       @ok="handleModalOk"
   >
-    <p>Test</p>
+    <a-form :model="ebook" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+      <a-form-item label="Cover">
+        <a-input v-model:value="ebook.cover" />
+      </a-form-item>
+      <a-form-item label="Name">
+        <a-input v-model:value="ebook.name" />
+      </a-form-item>
+      <a-form-item label="Category 1">
+        <a-input v-model:value="ebook.category1" />
+      </a-form-item>
+      <a-form-item label="Category 2">
+        <a-input v-model:value="ebook.category2" />
+      </a-form-item>
+      <a-form-item label="Description">
+        <a-input v-model:value="ebook.description" type="textarea"/>
+      </a-form-item>
+    </a-form>
   </a-modal>
 </template>
 
@@ -139,6 +155,7 @@ export default defineComponent({
     };
 
     //Ebook Form
+    const ebook = ref({});
     const modalVisible = ref<boolean>(false);
     const modalLoading = ref<boolean>(false);
     const handleModalOk = () => {
@@ -150,8 +167,9 @@ export default defineComponent({
     };
 
     //edit button
-    const edit = () => {
+    const edit = (record: any) => {
       modalVisible.value = true;
+      ebook.value = record
     };
 
 
@@ -169,6 +187,7 @@ export default defineComponent({
       loading,
       handleTableChange,
       edit,
+      ebook,
       modalVisible,
       modalLoading,
       handleModalOk
