@@ -42,6 +42,14 @@
       </a-table>
     </a-layout-content>
   </a-layout>
+  <a-modal
+      title="Ebook Form"
+      v-model:visible="modalVisible"
+      :confirm-loading="modalLoading"
+      @ok="handleModalOk"
+  >
+    <p>Test</p>
+  </a-modal>
 </template>
 
 <script lang="ts">
@@ -130,6 +138,23 @@ export default defineComponent({
       });
     };
 
+    //Ebook Form
+    const modalVisible = ref<boolean>(false);
+    const modalLoading = ref<boolean>(false);
+    const handleModalOk = () => {
+      modalLoading.value = true;
+      setTimeout(() => {
+        modalVisible.value = false;
+        modalLoading.value = false;
+      }, 2000);
+    };
+
+    //edit button
+    const edit = () => {
+      modalVisible.value = true;
+    };
+
+
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -142,7 +167,11 @@ export default defineComponent({
       pagination,
       columns,
       loading,
-      handleTableChange
+      handleTableChange,
+      edit,
+      modalVisible,
+      modalLoading,
+      handleModalOk
     }
   }
 });
