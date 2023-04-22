@@ -5,8 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.steven.wiki.domain.Ebook;
 import com.steven.wiki.domain.EbookExample;
 import com.steven.wiki.mapper.EbookMapper;
-import com.steven.wiki.request.EbookReq;
-import com.steven.wiki.response.EbookResp;
+import com.steven.wiki.request.EbookQueryReq;
+import com.steven.wiki.request.EbookSaveReq;
+import com.steven.wiki.response.EbookQueryResp;
 import com.steven.wiki.response.PageResp;
 import com.steven.wiki.utils.CopyUtil;
 import jakarta.annotation.Resource;
@@ -25,7 +26,7 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
 
         //fix, create criteria(where in sql); 固定写法，创建criteria变量（相当于sql中的where条件）
         EbookExample ebookExample = new EbookExample();
@@ -52,16 +53,16 @@ public class EbookService {
 //            respList.add(ebookResp);
 //        }
 
-        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class); //copy list value
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class); //copy list value
 
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
 
         return pageResp;
     }
 
-    public List<EbookResp> all() {
+    public List<EbookQueryResp> all() {
 
         //fix, create criteria(where in sql); 固定写法，创建criteria变量（相当于sql中的where条件）
         EbookExample ebookExample = new EbookExample();
@@ -87,7 +88,17 @@ public class EbookService {
 //            respList.add(ebookResp);
 //        }
 
-         return CopyUtil.copyList(ebookList, EbookResp.class); //copy list value
+         return CopyUtil.copyList(ebookList, EbookQueryResp.class); //copy list value
+    }
+
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+        if (ObjectUtils.isEmpty(req.getId())) {
+            //Insert a new ebook
+            ebookMapper.insert(ebook);
+        }else
+            ebookMapper.updateByPrimaryKey(ebook); //Update an existing ebook
+
     }
 
 }

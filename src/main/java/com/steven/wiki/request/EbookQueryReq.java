@@ -3,7 +3,7 @@ package com.steven.wiki.request;
 /*
 Use for transfer parameters to request; 用于向request传递参数
  */
-public class EbookReq extends PageReq {
+public class EbookQueryReq extends PageReq {
     private Long id;
 
     private String name;

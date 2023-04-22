@@ -1,9 +1,6 @@
-package com.steven.wiki.response;
+package com.steven.wiki.request;
 
-/*
-use for return value to front end;用于返回值到前端，去掉/增加一些字段
- */
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
 
     private String name;

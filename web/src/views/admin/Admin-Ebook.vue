@@ -160,10 +160,20 @@ export default defineComponent({
     const modalLoading = ref<boolean>(false);
     const handleModalOk = () => {
       modalLoading.value = true;
-      setTimeout(() => {
-        modalVisible.value = false;
-        modalLoading.value = false;
-      }, 2000);
+
+      axios.post("ebook/save", ebook.value).then((response) => {
+        const data = response.data;  // data = commonResp at backend
+        if (data.success) {
+          modalVisible.value = false;
+          modalLoading.value = false;
+
+          //reloading ebook list
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize
+          });
+        }
+      });
     };
 
     //edit button
