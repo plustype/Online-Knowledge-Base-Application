@@ -102,7 +102,10 @@ public class EbookService {
             ebookMapper.insert(ebook);
         }else
             ebookMapper.updateByPrimaryKey(ebook); //Update an existing ebook
+    }
 
+    public void delete(Long id) {
+        ebookMapper.deleteByPrimaryKey(id);
     }
 
 }
