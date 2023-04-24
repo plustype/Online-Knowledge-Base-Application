@@ -10,6 +10,7 @@ import com.steven.wiki.request.EbookSaveReq;
 import com.steven.wiki.response.EbookQueryResp;
 import com.steven.wiki.response.PageResp;
 import com.steven.wiki.utils.CopyUtil;
+import com.steven.wiki.utils.SnowFlake;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +25,10 @@ public class EbookService {
     private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
 
     @Resource
-    private EbookMapper ebookMapper;
+    private SnowFlake snowFlake;
 
+    @Resource
+    private EbookMapper ebookMapper;
     public PageResp<EbookQueryResp> list(EbookQueryReq req) {
 
         //fix, create criteria(where in sql); 固定写法，创建criteria变量（相当于sql中的where条件）
@@ -95,6 +98,7 @@ public class EbookService {
         Ebook ebook = CopyUtil.copy(req, Ebook.class);
         if (ObjectUtils.isEmpty(req.getId())) {
             //Insert a new ebook
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
         }else
             ebookMapper.updateByPrimaryKey(ebook); //Update an existing ebook
