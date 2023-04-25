@@ -91,6 +91,7 @@
 import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import axios from 'axios';
 import { message} from "ant-design-vue";
+import {Tool} from "../../../util/tool";
 
 export default defineComponent({
   name: 'AdminEbook',
@@ -208,7 +209,7 @@ export default defineComponent({
     //edit button
     const edit = (record: any) => {
       modalVisible.value = true;
-      ebook.value = record
+      ebook.value = Tool.copy(record);  //press 'edit' button, copy current record to edit
     };
 
     //add button
