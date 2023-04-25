@@ -7,6 +7,7 @@ import com.steven.wiki.response.EbookQueryResp;
 import com.steven.wiki.response.PageResp;
 import com.steven.wiki.service.EbookService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class EbookController {
 
     //Ebook Management API
     @GetMapping("/list")
-    public CommonResp list(EbookQueryReq req) {
+    public CommonResp list(@Valid EbookQueryReq req) {
         CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
         PageResp<EbookQueryResp> list = ebookService.list(req);
         resp.setContent(list);
