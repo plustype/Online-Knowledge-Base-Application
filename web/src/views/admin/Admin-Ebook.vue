@@ -172,16 +172,18 @@ export default defineComponent({
       modalLoading.value = true;
 
       axios.post("ebook/save", ebook.value).then((response) => {
+        modalLoading.value = false;
         const data = response.data;  // data = commonResp at backend
         if (data.success) {
           modalVisible.value = false;
-          modalLoading.value = false;
 
           //reloading ebook list
           handleQuery({
             page: pagination.value.current,
             size: pagination.value.pageSize
           });
+        }else {
+          message.error(data.message);
         }
       });
     };
