@@ -12,7 +12,7 @@
                 placeholder="category name"
                 enter-button="Search"
                 style="width: 230px"
-                @search="handleQuery({page: 1, size: pagination.pageSize})"
+                @search="handleQuery()"
             />
           </a-form-item>
           <a-form-item>
@@ -26,9 +26,8 @@
           :columns="columns"
           :row-key="record => record.id"
           :data-source="categorys"
-          :pagination="pagination"
           :loading="loading"
-          @change="handleTableChange"
+          :pagination="false"
       >
         <template #cover="{ text: cover }">
           <img v-if="cover" :src="cover" alt="avatar" width="50" height="50"/>
@@ -93,12 +92,6 @@ export default defineComponent({
     const param = ref();
     param.value ={};
     const categorys = ref(); //定义响应式数据变量，变化实时响应到界面
-    const pagination = ref({
-          current: 1,
-          pageSize: 10,
-          total: 0
-        });
-
     const loading = ref(false);
 
     const columns = [
@@ -125,39 +118,19 @@ export default defineComponent({
     /**
      * 数据查询
      **/
-    const handleQuery = (params: any) => {
+    const handleQuery = () => {
       loading.value = true;
-      axios.get("category/list",
-          {params : {
-            page: params.page,
-            size: params.size,
-            name: param.value.name
-          }
-      }).then((response) => {
+      axios.get("category/all").then((response) => {
         loading.value = false;
         const data = response.data;
         if (data.success) {
-          categorys.value = data.content.list;
-
-          //重置分页按钮
-          pagination.value.current = params.page;
-          pagination.value.total = data.content.total;
+          categorys.value = data.content;
         }else {
           message.error(data.message)
         }
       });
     }
 
-    /**
-     * 表格点击页码时触发
-     */
-    const handleTableChange = (pagination: any) => {
-      console.log("看看自带的分页参数都有啥：" + pagination);
-      handleQuery({
-        page: pagination.current,
-        size: pagination.pageSize
-      });
-    };
 
     //Category Form
     const category = ref({});
@@ -173,10 +146,7 @@ export default defineComponent({
           modalVisible.value = false;
 
           //reloading category list
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize
-          });
+          handleQuery();
         }else {
           message.error(data.message);
         }
@@ -201,29 +171,21 @@ export default defineComponent({
         const data = response.data;  // data = commonResp at backend
         if (data.success) {  // if action is successes
           //reloading category list
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize
-          });
+          handleQuery();
         }
       });
     }
 
 
     onMounted(() => {
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize
-      });
+      handleQuery();
     });
 
     return {
       param,
       categorys,  //html代码要拿到响应式变量，需要在setup最后return
-      pagination,
       columns,
       loading,
-      handleTableChange,
       handleQuery,
 
       edit,
