@@ -25,7 +25,7 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="categorys"
+          :data-source="level1"
           :loading="loading"
           :pagination="false"
       >
@@ -116,6 +116,20 @@ export default defineComponent({
     ]
 
     /**
+     * 一级分类树，children属性就是二级分类
+     * [{
+     *   id: "",
+     *   name: "",
+     *   children: [{
+     *     id: "",
+     *     name: "",
+     *   }]
+     * }]
+     */
+    const level1 = ref(); // 一级分类树，children属性就是二级分类
+    // level1.value = [];
+
+    /**
      * 数据查询
      **/
     const handleQuery = () => {
@@ -125,6 +139,11 @@ export default defineComponent({
         const data = response.data;
         if (data.success) {
           categorys.value = data.content;
+          console.log("Origin Array: ", categorys.value);
+
+          level1.value = [];
+          level1.value = Tool.array2Tree(categorys.value,0);
+          console.log("Tree Structure: ", level1);
         }else {
           message.error(data.message)
         }
@@ -183,7 +202,8 @@ export default defineComponent({
 
     return {
       param,
-      categorys,  //html代码要拿到响应式变量，需要在setup最后return
+      //categorys,  //html代码要拿到响应式变量，需要在setup最后return
+      level1,
       columns,
       loading,
       handleQuery,
