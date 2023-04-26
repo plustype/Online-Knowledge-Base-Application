@@ -33,9 +33,9 @@
         <template #cover="{ text: cover }">
           <img v-if="cover" :src="cover" alt="avatar" width="50" height="50"/>
         </template>
-<!--        <template v-slot:category="{ text, record }">-->
-<!--          <span>{{ getCategoryName(record.category1) }} / {{ getCategoryName(record.category2) }}</span>-->
-<!--        </template>-->
+        <template v-slot:category="{ text, record }">
+          <span>{{ getCategoryName(record.category1) }} / {{ getCategoryName(record.category2) }}</span>
+        </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
 <!--            <router-link :to="'/admin/doc?ebookId=' + record.id">-->
@@ -119,13 +119,8 @@ export default defineComponent({
         dataIndex : 'name',
       },
       {
-        title: 'Category 1',
-        key: 'category1',
-        dataIndex : 'category1'
-      },
-      {
-        title: 'Category 2',
-        dataIndex : 'category2'
+        title: 'Category',
+        slots: {customRender: 'category'}
       },
       {
         title: 'Chapter Count',
@@ -238,6 +233,7 @@ export default defineComponent({
     }
 
     const level1 = ref(); // 一级分类树，children属性就是二级分类
+    let categorys: any;
 
     /**
      * 分类数据查询
@@ -248,7 +244,7 @@ export default defineComponent({
         loading.value = false;
         const data = response.data;
         if (data.success) {
-          const categorys = data.content;
+          categorys = data.content;
           console.log("Origin Array: ", categorys);
 
           level1.value = [];
@@ -258,6 +254,16 @@ export default defineComponent({
           message.error(data.message)
         }
       });
+    }
+
+    const getCategoryName = (cid: number) => {
+      let result = "";
+      categorys.forEach((item: any) => {
+        if (item.id === cid) {
+          result = item.name;
+        }
+      });
+      return result;
     }
 
 
@@ -277,6 +283,7 @@ export default defineComponent({
       loading,
       handleTableChange,
       handleQuery,
+      getCategoryName,
 
       edit,
       add,
