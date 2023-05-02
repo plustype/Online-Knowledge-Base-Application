@@ -4,12 +4,11 @@
     <a-menu
         mode="inline"
         :style="{ height: '100%', borderRight: 0 }"
+        @click="handleClick"
     >
       <a-menu-item key="welcome">
-        <router-link to="admin/ebook">
           <MailOutlined />
           <span>Welcome</span>
-        </router-link>
       </a-menu-item>
       <a-sub-menu v-for="item in level1" :key="item.id">
         <template v-slot:title>
@@ -24,7 +23,10 @@
     <a-layout-content
       :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
   >
-      <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }"
+      <div class="welcome" v-show="isShowWelcome">
+        <h1>welcome to Wiki</h1>
+      </div>
+      <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }"
               :data-source="ebooks">
 
         <template #renderItem="{ item }">
@@ -110,17 +112,37 @@ export default defineComponent({
       });
     };
 
-    const handleClick = () => {
-      console.log("menu click")
-    }
+    const isShowWelcome = ref(true);
+    let category2 = 0;
 
-    onMounted(() => {   //生命周期函数
-      handleQueryCategory();
-      axios.get("/ebook/all").then((response) => {  //初始化逻辑都写到onMounted方法里
+    const handleQueryEbook = () => {
+      axios.get("/ebook/all", {
+        params: {
+          page: 1,
+          size: 1000,
+          category2: category2
+        }
+      }).
+      then((response) => {  //初始化逻辑都写到onMounted方法里
         const data = response.data;
         ebooks.value = data.content;
         //ebooks1.books = data.content;
       })
+    }
+
+    const handleClick = (value: any) => {
+      //console.log("menu click", value)
+      if (value.key === 'welcome') {
+        isShowWelcome.value = true;
+      }else {
+        category2 = value.key;
+        isShowWelcome.value = false;
+        handleQueryEbook();
+      }
+    };
+
+    onMounted(() => {   //生命周期函数
+      handleQueryCategory();
     });
 
     return {
@@ -131,6 +153,7 @@ export default defineComponent({
       actions,
       handleClick,
       level1,
+      isShowWelcome,
     }
   }
 });

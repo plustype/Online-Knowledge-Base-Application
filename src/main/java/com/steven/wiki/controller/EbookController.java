@@ -30,9 +30,9 @@ public class EbookController {
 
     //Home page API
     @GetMapping("/all")
-    public CommonResp all() {
+    public CommonResp all(@Valid EbookQueryReq req) {
         CommonResp<List<EbookQueryResp>> resp = new CommonResp<>();
-        List<EbookQueryResp> all = ebookService.all();
+        List<EbookQueryResp> all = ebookService.all(req);
         resp.setContent(all);
         return resp;
     }

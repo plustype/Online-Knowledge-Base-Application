@@ -6,7 +6,10 @@ Use for transfer parameters to request; 用于向request传递参数
 public class EbookQueryReq extends PageReq {
     private Long id;
 
+    private long category2;
+
     private String name;
+
 
 
     public Long getId() {
@@ -25,15 +28,20 @@ public class EbookQueryReq extends PageReq {
         this.name = name;
     }
 
+    public long getCategory2() {
+        return category2;
+    }
+
+    public void setCategory2(long category2) {
+        this.category2 = category2;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append("]");
-        return sb.toString();
+        return "EbookQueryReq{" +
+               "id=" + id +
+               ", category2=" + category2 +
+               ", name='" + name + '\'' +
+               "} " + super.toString();
     }
 }

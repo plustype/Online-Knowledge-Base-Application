@@ -39,6 +39,11 @@ public class EbookService {
             criteria.andNameLike("%" + req.getName() + "%");
         }
 
+//        if (!ObjectUtils.isEmpty(req.getCategory2()))    //if req.name is not empty, add below constrain into sql
+//        {
+//            criteria.andCategory2EqualTo(req.getCategory2());
+//        }
+
         PageHelper.startPage(req.getPage(), req.getSize());
         var ebookList = ebookMapper.selectByExample(ebookExample);
 
@@ -65,7 +70,7 @@ public class EbookService {
         return pageResp;
     }
 
-    public List<EbookQueryResp> all() {
+    public List<EbookQueryResp> all(EbookQueryReq req) {
 
         //fix, create criteria(where in sql); 固定写法，创建criteria变量（相当于sql中的where条件）
         EbookExample ebookExample = new EbookExample();
@@ -74,6 +79,11 @@ public class EbookService {
 //        {
 //            criteria.andNameLike("%" + req.getName() + "%");
 //        }
+
+        if (!ObjectUtils.isEmpty(req.getCategory2()))    //if req.name is not empty, add below constrain into sql
+        {
+            criteria.andCategory2EqualTo(req.getCategory2());
+        }
 
         var ebookList = ebookMapper.selectByExample(ebookExample);
 
