@@ -65,3 +65,23 @@ insert into `category` (id, parent, name, sort) VALUES (5001, 5000, 'AWS', 5001)
 insert into `category` (id, parent, name, sort) VALUES (6000, 6000, 'Data Structure', 6000);
 insert into `category` (id, parent, name, sort) VALUES (6001, 6000, 'Array', 6001);
 insert into `category` (id, parent, name, sort) VALUES (6002, 6000, 'Hash Table', 6002);
+
+# --doc table
+drop table if exists `doc`;
+create table `doc` (
+    `id` bigint not null,
+    `ebook_id` bigint not null default 0,
+    `parent` bigint not null default 0,
+    `name` varchar(50) not null ,
+    `sort` int,
+    `view_count` int default 0,
+    `like_count` int default 0,
+    primary key (`id`)
+) engine = innodb default charset = utf8mb4;
+
+insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (1, 1, 0, 'doc1', 1, 0, 0);
+insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (2, 1, 1, 'doc1.1', 1, 0, 0);
+insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (3, 1, 0, 'doc2', 2, 0, 0);
+insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (4, 1, 3, 'doc2.1', 1, 0, 0);
+insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (5, 1, 3, 'doc2.2', 2, 0, 0);
+insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (6, 1, 5, 'doc2.2.1', 1, 0, 0);
