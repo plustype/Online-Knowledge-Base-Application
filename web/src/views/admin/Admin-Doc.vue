@@ -1,0 +1,234 @@
+<template>
+  <a-layout>
+    <a-layout-content
+        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
+    >
+      <p>
+        <a-form layout="inline">
+          <a-form-item>
+            <a-input-search
+                :model="param"
+                v-model:value="param.name"
+                placeholder="doc name"
+                enter-button="Search"
+                style="width: 230px"
+                @search="handleQuery()"
+            />
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="add()" >
+              Add
+            </a-button>
+          </a-form-item>
+        </a-form>
+      </p>
+      <a-table
+          :columns="columns"
+          :row-key="record => record.id"
+          :data-source="level1"
+          :loading="loading"
+          :pagination="false"
+      >
+        <template #cover="{ text: cover }">
+          <img v-if="cover" :src="cover" alt="avatar" width="50" height="50"/>
+        </template>
+<!--        <template v-slot:doc="{ text, record }">-->
+<!--          <span>{{ getDocName(record.doc1Id) }} / {{ getDocName(record.doc2Id) }}</span>-->
+<!--        </template>-->
+        <template v-slot:action="{ text, record }">
+          <a-space size="small">
+<!--            <router-link :to="'/admin/doc?docId=' + record.id">-->
+<!--              <a-button type="primary">-->
+<!--                文档管理-->
+<!--              </a-button>-->
+<!--            </router-link>-->
+            <a-button type="primary" @click="edit(record)">
+              Edit
+            </a-button>
+            <a-popconfirm
+                title="Are you sure delete this record?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="handleDelete(record.id)"
+            >
+              <a-button type="danger">
+                Delete
+              </a-button>
+            </a-popconfirm>
+          </a-space>
+        </template>
+      </a-table>
+    </a-layout-content>
+  </a-layout>
+  <a-modal
+      title="Doc Form"
+      v-model:visible="modalVisible"
+      :confirm-loading="modalLoading"
+      @ok="handleModalOk"
+  >
+    <a-form :model="doc" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+      <a-form-item label="Name">
+        <a-input v-model:value="doc.name" />
+      </a-form-item>
+      <a-form-item label="Parent Doc">
+<!--        <a-input v-model:value="doc.parent" />-->
+        <a-select
+            ref="select"
+            v-model:value="doc.parent"
+        >
+          <a-select-option value="0">
+            None
+          </a-select-option>
+          <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="doc.id === c.id">
+            {{c.name}}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="Sort">
+        <a-input v-model:value="doc.sort" />
+      </a-form-item>
+    </a-form>
+  </a-modal>
+</template>
+
+<script lang="ts">
+import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
+import axios from 'axios';
+import { message} from "ant-design-vue";
+import {Tool} from "@/util/tool";
+
+export default defineComponent({
+  name: 'AdminDoc',
+  setup() { //setup 就放一些参数定义，方法定义
+    const param = ref();
+    param.value ={};
+    const docs = ref(); //定义响应式数据变量，变化实时响应到界面
+    const loading = ref(false);
+
+    const columns = [
+      {
+        title: 'Name',
+        dataIndex : 'name',
+      },
+      {
+        title: 'Parent Doc',
+        key: 'parent',
+        dataIndex : 'parent'
+      },
+      {
+        title: 'Sort',
+        dataIndex : 'sort'
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        slots: {customRender: 'action'}
+      },
+    ]
+
+    /**
+     * 一级分类树，children属性就是二级分类
+     * [{
+     *   id: "",
+     *   name: "",
+     *   children: [{
+     *     id: "",
+     *     name: "",
+     *   }]
+     * }]
+     */
+    const level1 = ref(); // 一级分类树，children属性就是二级分类
+    // level1.value = [];
+
+    /**
+     * 数据查询
+     **/
+    const handleQuery = () => {
+      loading.value = true;
+      axios.get("doc/all").then((response) => {
+        loading.value = false;
+        const data = response.data;
+        if (data.success) {
+          docs.value = data.content;
+          console.log("Origin Array: ", docs.value);
+
+          level1.value = [];
+          level1.value = Tool.array2Tree(docs.value,0);
+          console.log("Tree Structure: ", level1);
+        }else {
+          message.error(data.message)
+        }
+      });
+    }
+
+
+    //Doc Form
+    const doc = ref({});
+    const modalVisible = ref<boolean>(false);
+    const modalLoading = ref<boolean>(false);
+    const handleModalOk = () => {
+      modalLoading.value = true;
+
+      axios.post("doc/save", doc.value).then((response) => {
+        modalLoading.value = false;
+        const data = response.data;  // data = commonResp at backend
+        if (data.success) {
+          modalVisible.value = false;
+
+          //reloading doc list
+          handleQuery();
+        }else {
+          message.error(data.message);
+        }
+      });
+    };
+
+    //edit button
+    const edit = (record: any) => {
+      modalVisible.value = true;
+      doc.value = Tool.copy(record);  //press 'edit' button, copy current record to edit
+    };
+
+    //add button
+    const add = () => {
+      modalVisible.value = true;
+      doc.value = {};
+    };
+
+    //Delete button
+    const handleDelete = (id : number) => {
+      axios.delete("doc/delete/" + id).then((response) => {
+        const data = response.data;  // data = commonResp at backend
+        if (data.success) {  // if action is successes
+          //reloading doc list
+          handleQuery();
+        }
+      });
+    }
+
+
+    onMounted(() => {
+      handleQuery();
+    });
+
+    return {
+      param,
+      //docs,  //html代码要拿到响应式变量，需要在setup最后return
+      level1,
+      columns,
+      loading,
+      handleQuery,
+
+      edit,
+      add,
+
+      doc,
+      modalVisible,
+      modalLoading,
+      handleModalOk,
+      handleDelete,
+
+    }
+  }
+});
+</script>
