@@ -12,7 +12,7 @@
                 placeholder="doc name"
                 enter-button="Search"
                 style="width: 230px"
-                @search="handleQuery()"
+                @search="handleSearchQuery({page: 1, size: pagination.pageSize})"
             />
           </a-form-item>
           <a-form-item>
@@ -108,14 +108,29 @@ import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import axios from 'axios';
 import { message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
+import {useRoute} from "vue-router";
 
 export default defineComponent({
   name: 'AdminDoc',
   setup() { //setup 就放一些参数定义，方法定义
+    const route = useRoute();
+    console.log("路由：", route);
+    console.log("route.path：", route.path);
+    console.log("route.query：", route.query);
+    console.log("route.param：", route.params);
+    console.log("route.fullPath：", route.fullPath);
+    console.log("route.name：", route.name);
+    console.log("route.meta：", route.meta);
     const param = ref();
     param.value ={};
     const docs = ref(); //定义响应式数据变量，变化实时响应到界面
     const loading = ref(false);
+    const pagination = ref({
+      current: 1,
+      pageSize: 4,
+      total: 0
+    });
+
 
     const columns = [
       {
@@ -157,7 +172,7 @@ export default defineComponent({
      **/
     const handleQuery = () => {
       loading.value = true;
-      axios.get("doc/all").then((response) => {
+      axios.get("doc/all/" + route.query.ebookId).then((response) => {
         loading.value = false;
         const data = response.data;
         if (data.success) {
@@ -167,6 +182,36 @@ export default defineComponent({
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value,0);
           console.log("Tree Structure: ", level1);
+        }else {
+          message.error(data.message)
+        }
+      });
+    }
+
+    const handleSearchQuery = (params: any) => {
+      loading.value = true;
+      axios.get("doc/list",
+          {params : {
+              page: params.page,
+              size: params.size,
+              name: param.value.name,
+              ebookId: route.query.ebookId,
+            }
+        }).then((response) => {
+        loading.value = false;
+        const data = response.data;
+        if (data.success) {
+          docs.value = data.content.list;
+          console.log("Origin Array: ", docs.value);
+
+          level1.value = [];
+          level1.value = Tool.array2Tree(docs.value,0);
+          console.log("Tree Structure: ", level1);
+
+          //重置分页按钮
+          pagination.value.current = params.page;
+          pagination.value.total = data.content.total;
+
         }else {
           message.error(data.message)
         }
@@ -243,7 +288,7 @@ export default defineComponent({
     //add button
     const add = () => {
       modalVisible.value = true;
-      doc.value = {};
+      doc.value ={ebookId: route.query.ebookId};
 
       treeSelectData.value = Tool.copy(level1.value) || [];
 
@@ -269,11 +314,13 @@ export default defineComponent({
 
     return {
       param,
+      pagination,
       //docs,  //html代码要拿到响应式变量，需要在setup最后return
       level1,
       columns,
       loading,
       handleQuery,
+      handleSearchQuery,
 
       edit,
       add,

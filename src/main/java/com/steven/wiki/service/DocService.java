@@ -40,6 +40,11 @@ public class DocService {
             criteria.andNameLike("%" + req.getName() + "%");
         }
 
+        if (!ObjectUtils.isEmpty(req.getEbookId()))    //if req.name is not empty, add below constrain into sql
+        {
+            criteria.andEbookIdEqualTo(req.getEbookId() );
+        }
+
         PageHelper.startPage(req.getPage(), req.getSize());
         var docList = docMapper.selectByExample(docExample);
 
@@ -66,10 +71,11 @@ public class DocService {
         return pageResp;
     }
 
-    public List<DocQueryResp> all() {
+    public List<DocQueryResp> all(Long ebookId) {
 
         //fix, create criteria(where in sql); 固定写法，创建criteria变量（相当于sql中的where条件）
         DocExample docExample = new DocExample();
+        docExample.createCriteria().andEbookIdEqualTo(ebookId);
         docExample.setOrderByClause("sort asc");
         var docList = docMapper.selectByExample(docExample);
 
