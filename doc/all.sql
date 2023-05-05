@@ -85,3 +85,5 @@ insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VAL
 insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (4, 1, 3, 'doc2.1', 1, 0, 0);
 insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (5, 1, 3, 'doc2.2', 2, 0, 0);
 insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (6, 1, 5, 'doc2.2.1', 1, 0, 0);
+
+insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (7, 2, 0, 'docA', 1, 0, 0);
