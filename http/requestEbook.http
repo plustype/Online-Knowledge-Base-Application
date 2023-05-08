@@ -11,3 +11,6 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8880/doc/list?page=1&size=4&name=doca&ebookId=2
+###
+
+GET http://localhost:8880/doc/all/2
