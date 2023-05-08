@@ -333,11 +333,14 @@ export default defineComponent({
 
     //Delete button
     const handleDelete = (id : number) => {
+      // 清空数组，否则多次删除时，数组会一直增加
+      deleteIds.length = 0;
+      deleteNames.length = 0;
       getDeleteIds(level1.value,id);
       Modal.confirm({
-        title: '重要提醒',
+        title: 'Important Notice',
         icon: createVNode(ExclamationCircleOutlined),
-        content: '将删除：【' + deleteNames.join("，") + "】删除后不可恢复，确认删除？",
+        content: 'Document [' + deleteNames.join("，") + "] will be deleted permanently, still proceed?",
         onOk() {
           axios.delete("doc/delete/" + deleteIds.join(",")).then((response) => {
             const data = response.data;  // data = commonResp at backend
