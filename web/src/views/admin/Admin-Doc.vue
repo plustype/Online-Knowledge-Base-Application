@@ -99,6 +99,9 @@
       <a-form-item label="Sort">
         <a-input v-model:value="doc.sort" />
       </a-form-item>
+      <a-form-item label="Content">
+        <div id="content"></div>
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
@@ -110,6 +113,10 @@ import { message, Modal} from "ant-design-vue";
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
 import ExclamationCircleOutlined from "@ant-design/icons-vue/ExclamationCircleOutlined";
+import E from "wangeditor";
+
+declare var window: any
+
 
 
 export default defineComponent({
@@ -129,7 +136,7 @@ export default defineComponent({
     const loading = ref(false);
     const pagination = ref({
       current: 1,
-      pageSize: 4,
+      pageSize: 1000,
       total: 0
     });
 
@@ -229,6 +236,11 @@ export default defineComponent({
     const doc = ref({});
     const modalVisible = ref<boolean>(false);
     const modalLoading = ref<boolean>(false);
+    const editor = new E("#content");
+    editor.config.lang = 'en'
+    editor.i18next = window.i18next;
+
+
     const handleModalOk = () => {
       modalLoading.value = true;
 
@@ -318,6 +330,11 @@ export default defineComponent({
 
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({id: 0, name: 'None'});
+
+      //loading wangEditor set 100ms delay to let modal loading first
+      setTimeout(function () {
+        editor.create();
+      }, 100);
     };
 
     //add button
@@ -329,6 +346,10 @@ export default defineComponent({
 
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({id: 0, name: 'None'});
+
+      setTimeout(function () {
+        editor.create();
+      }, 100);
     };
 
     //Delete button

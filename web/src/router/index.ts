@@ -5,6 +5,8 @@ import AdminEbook from '../views/admin/Admin-Ebook.vue'
 import AdminCategory from '../views/admin/Admin-Category.vue'
 import AdminDoc from '../views/admin/Admin-Doc.vue'
 
+
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
