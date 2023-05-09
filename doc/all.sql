@@ -87,3 +87,11 @@ insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VAL
 insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (6, 1, 5, 'doc2.2.1', 1, 0, 0);
 
 insert into `doc` (id, ebook_id, parent, name, sort, view_count, like_count) VALUES (7, 2, 0, 'docA', 1, 0, 0);
+
+#---doc content----
+drop table if exists `content`;
+create table `content` (
+    `id` bigint not null ,
+    `content` mediumtext not null ,
+    primary key (`id`)
+) engine = innodb default charset = utf8mb4;
