@@ -40,7 +40,7 @@
           <a-space size="small">
             <router-link :to="'/admin/doc?ebookId=' + record.id">
               <a-button type="primary" >
-                Doc
+                Content
               </a-button>
             </router-link>
             <a-button type="primary" @click="edit(record)">
@@ -62,7 +62,7 @@
     </a-layout-content>
   </a-layout>
   <a-modal
-      title="Ebook Form"
+      title="Add Documents"
       v-model:visible="modalVisible"
       :confirm-loading="modalLoading"
       @ok="handleModalOk"

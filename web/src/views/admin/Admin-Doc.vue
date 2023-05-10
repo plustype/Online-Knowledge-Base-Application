@@ -34,7 +34,8 @@
               :default-expand-all-rows="true"
           >
             <template #name="{ text, record }">
-              {{record.sort}} {{text}}
+<!--              {{record.sort}} -->
+              {{text}}
             </template>
             <!--        <template v-slot:doc="{ text, record }">-->
             <!--          <span>{{ getDocName(record.doc1Id) }} / {{ getDocName(record.doc2Id) }}</span>-->
@@ -83,7 +84,7 @@
                   style="width: 100%"
                   :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
                   :tree-data="treeSelectData"
-                  placeholder="Select Parent Doc"
+                  placeholder="Select Parent Chapter"
                   tree-default-expand-all
                   :fieldNames="{label: 'name', key: 'id', value: 'id'}"
               >

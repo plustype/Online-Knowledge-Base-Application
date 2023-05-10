@@ -1,6 +1,6 @@
 <template>
   <a-layout-footer style="text-align: center">
-    Wiki System ©2023 Created By Yu Zhao
+    Knowledge Base System ©2023 Created By Yu Zhao
   </a-layout-footer>
 </template>
 
