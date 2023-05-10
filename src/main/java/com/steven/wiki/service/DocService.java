@@ -2,8 +2,10 @@ package com.steven.wiki.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.steven.wiki.domain.Content;
 import com.steven.wiki.domain.Doc;
 import com.steven.wiki.domain.DocExample;
+import com.steven.wiki.mapper.ContentMapper;
 import com.steven.wiki.mapper.DocMapper;
 import com.steven.wiki.request.DocQueryReq;
 import com.steven.wiki.request.DocSaveReq;
@@ -29,6 +31,10 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
+
     public PageResp<DocQueryResp> list(DocQueryReq req) {
 
         //fix, create criteria(where in sql); 固定写法，创建criteria变量（相当于sql中的where条件）
@@ -84,12 +90,20 @@ public class DocService {
 
     public void save(DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
+        Content content = CopyUtil.copy(req, Content.class);
         if (ObjectUtils.isEmpty(req.getId())) {
             //Insert a new doc
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
-        }else
+
+            content.setId((doc.getId()));
+            contentMapper.insert(content);
+        }else {
             docMapper.updateByPrimaryKey(doc); //Update an existing doc
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if (count == 0)  //if count = 0  means no such record in the content table, so need to use insert query
+                contentMapper.insert(content);
+        }
     }
 
     public void delete(Long id) {
