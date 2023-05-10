@@ -3,107 +3,112 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <p>
-        <a-form layout="inline">
-          <a-form-item>
-            <a-input-search
-                :model="param"
-                v-model:value="param.name"
-                placeholder="doc name"
-                enter-button="Search"
-                style="width: 230px"
-                @search="handleSearchQuery({page: 1, size: pagination.pageSize})"
-            />
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="add()" >
-              Add
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </p>
-      <a-table
-          :columns="columns"
-          :row-key="record => record.id"
-          :data-source="level1"
-          :loading="loading"
-          :pagination="false"
-      >
-        <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover" alt="avatar" width="50" height="50"/>
-        </template>
-<!--        <template v-slot:doc="{ text, record }">-->
-<!--          <span>{{ getDocName(record.doc1Id) }} / {{ getDocName(record.doc2Id) }}</span>-->
-<!--        </template>-->
-        <template v-slot:action="{ text, record }">
-          <a-space size="small">
-<!--            <router-link :to="'/admin/doc?docId=' + record.id">-->
-<!--              <a-button type="primary">-->
-<!--                文档管理-->
-<!--              </a-button>-->
-<!--            </router-link>-->
-            <a-button type="primary" @click="edit(record)">
-              Edit
-            </a-button>
-            <a-popconfirm
-                title="Are you sure delete this record?"
-                ok-text="Yes"
-                cancel-text="No"
-                @confirm="handleDelete(record.id)"
-            >
-              <a-button type="danger">
-                Delete
-              </a-button>
-            </a-popconfirm>
-          </a-space>
-        </template>
-      </a-table>
+      <a-row :gutter="24">
+        <a-col :span="8">
+          <p>
+            <a-form layout="inline">
+              <a-form-item>
+                <a-input-search
+                    :model="param"
+                    v-model:value="param.name"
+                    placeholder="doc name"
+                    enter-button="Search"
+                    style="width: 230px"
+                    @search="handleSearchQuery({page: 1, size: pagination.pageSize})"
+                />
+              </a-form-item>
+              <a-form-item>
+                <a-button type="primary" @click="add()" >
+                  Add
+                </a-button>
+              </a-form-item>
+            </a-form>
+          </p>
+          <a-table
+              v-if="level1.length > 0"
+              :columns="columns"
+              :row-key="record => record.id"
+              :data-source="level1"
+              :loading="loading"
+              :pagination="false"
+              :default-expand-all-rows="true"
+          >
+            <template #name="{ text, record }">
+              {{record.sort}} {{text}}
+            </template>
+            <!--        <template v-slot:doc="{ text, record }">-->
+            <!--          <span>{{ getDocName(record.doc1Id) }} / {{ getDocName(record.doc2Id) }}</span>-->
+            <!--        </template>-->
+            <template v-slot:action="{ text, record }">
+              <a-space size="small">
+                <!--            <router-link :to="'/admin/doc?docId=' + record.id">-->
+                <!--              <a-button type="primary">-->
+                <!--                文档管理-->
+                <!--              </a-button>-->
+                <!--            </router-link>-->
+                <a-button type="primary" @click="edit(record)" size="small">
+                  Edit
+                </a-button>
+                <a-popconfirm
+                    title="Are you sure delete this record?"
+                    ok-text="Yes"
+                    cancel-text="No"
+                    @confirm="handleDelete(record.id)"
+                >
+                  <a-button type="danger" size="small">
+                    Delete
+                  </a-button>
+                </a-popconfirm>
+              </a-space>
+            </template>
+          </a-table>
+        </a-col>
+        <a-col :span="16">
+          <p>
+            <a-form layout="inline" :model="param">
+              <a-form-item>
+                <a-button type="primary" @click="handleSave()" >
+                  Save
+                </a-button>
+              </a-form-item>
+            </a-form>
+          </p>
+          <a-form :model="doc" layout="vertical">
+            <a-form-item >
+              <a-input v-model:value="doc.name" placeholder="Name"/>
+            </a-form-item>
+            <a-form-item >
+              <a-tree-select
+                  v-model:value="doc.parent"
+                  style="width: 100%"
+                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                  :tree-data="treeSelectData"
+                  placeholder="Select Parent Doc"
+                  tree-default-expand-all
+                  :fieldNames="{label: 'name', key: 'id', value: 'id'}"
+              >
+              </a-tree-select>
+            </a-form-item>
+            <a-form-item >
+              <a-input v-model:value="doc.sort" placeholder="Sort"/>
+            </a-form-item>
+            <a-form-item label="Content">
+              <div id="content"></div>
+            </a-form-item>
+          </a-form>
+        </a-col>
+      </a-row>
+
     </a-layout-content>
   </a-layout>
-  <a-modal
-      title="Doc Form"
-      v-model:visible="modalVisible"
-      :confirm-loading="modalLoading"
-      @ok="handleModalOk"
-  >
-    <a-form :model="doc" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-      <a-form-item label="Name">
-        <a-input v-model:value="doc.name" />
-      </a-form-item>
-      <a-form-item label="Parent Doc">
-        <a-tree-select
-            v-model:value="doc.parent"
-            style="width: 100%"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-            :tree-data="treeSelectData"
-            placeholder="Please select"
-            tree-default-expand-all
-            :fieldNames="{label: 'name', key: 'id', value: 'id'}"
-        >
-        </a-tree-select>
-      </a-form-item>
-      <a-form-item label="Parent Doc">
-<!--        <a-input v-model:value="doc.parent" />-->
-        <a-select
-            ref="select"
-            v-model:value="doc.parent"
-        >
-          <a-select-option value="0">
-            None
-          </a-select-option>
-          <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="doc.id === c.id">
-            {{c.name}}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item label="Sort">
-        <a-input v-model:value="doc.sort" />
-      </a-form-item>
-      <a-form-item label="Content">
-        <div id="content"></div>
-      </a-form-item>
-    </a-form>
-  </a-modal>
+<!--  <a-modal-->
+<!--      title="Doc Form"-->
+<!--      v-model:visible="modalVisible"-->
+<!--      :confirm-loading="modalLoading"-->
+<!--      @ok="handleModalOk"-->
+<!--  >-->
+<!--    -->
+<!--  </a-modal>-->
 </template>
 
 <script lang="ts">
@@ -145,16 +150,17 @@ export default defineComponent({
       {
         title: 'Name',
         dataIndex : 'name',
+        slots: {customRender: `name`}
       },
-      {
-        title: 'Parent Doc',
-        key: 'parent',
-        dataIndex : 'parent'
-      },
-      {
-        title: 'Sort',
-        dataIndex : 'sort'
-      },
+      // {
+      //   title: 'Parent Doc',
+      //   key: 'parent',
+      //   dataIndex : 'parent'
+      // },
+      // {
+      //   title: 'Sort',
+      //   dataIndex : 'sort'
+      // },
       {
         title: 'Action',
         key: 'action',
@@ -174,7 +180,7 @@ export default defineComponent({
      * }]
      */
     const level1 = ref(); // 一级分类树，children属性就是二级分类
-    // level1.value = [];
+    level1.value = [];
 
     /**
      * 数据查询
@@ -237,11 +243,12 @@ export default defineComponent({
     const modalVisible = ref<boolean>(false);
     const modalLoading = ref<boolean>(false);
     const editor = new E("#content");
+    editor.config.zIndex = 0;
     editor.config.lang = 'en'
     editor.i18next = window.i18next;
 
 
-    const handleModalOk = () => {
+    const handleSave = () => {
       modalLoading.value = true;
 
       axios.post("doc/save", doc.value).then((response) => {
@@ -330,11 +337,6 @@ export default defineComponent({
 
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({id: 0, name: 'None'});
-
-      //loading wangEditor set 100ms delay to let modal loading first
-      setTimeout(function () {
-        editor.create();
-      }, 100);
     };
 
     //add button
@@ -346,10 +348,6 @@ export default defineComponent({
 
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({id: 0, name: 'None'});
-
-      setTimeout(function () {
-        editor.create();
-      }, 100);
     };
 
     //Delete button
@@ -377,6 +375,7 @@ export default defineComponent({
 
     onMounted(() => {
       handleQuery();
+      editor.create();
     });
 
     return {
@@ -395,7 +394,7 @@ export default defineComponent({
       doc,
       modalVisible,
       modalLoading,
-      handleModalOk,
+      handleSave,
       handleDelete,
 
       treeSelectData,
