@@ -21,7 +21,6 @@ This is an online knowledge base application where users can create their own ac
     - Log in validation
     - Times task
     - WebSocket web-site notice
-    -
 
 ### Tech
 
