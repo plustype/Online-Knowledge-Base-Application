@@ -3,6 +3,7 @@ package com.steven.wiki.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.steven.wiki.domain.Content;
+import com.steven.wiki.domain.ContentExample;
 import com.steven.wiki.domain.Doc;
 import com.steven.wiki.domain.DocExample;
 import com.steven.wiki.mapper.ContentMapper;
@@ -113,8 +114,12 @@ public class DocService {
     public void delete(List<String> ids) {
         DocExample docExample = new DocExample();
         DocExample.Criteria criteria = docExample.createCriteria();
+        ContentExample contentExample = new ContentExample();
+        ContentExample.Criteria criteria1 = contentExample.createCriteria();
         criteria.andIdIn(ids);
+        criteria1.andIdIn(ids);
         docMapper.deleteByExample(docExample);
+        contentMapper.deleteByExample(contentExample);
     }
 
 }
