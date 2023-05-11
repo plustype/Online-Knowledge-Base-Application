@@ -8,13 +8,14 @@
           <a-tree
             v-if="level1.length > 0"
             :treeData="level1"
-            @select="onselect"
+            @select="onSelect"
             :fieldNames="{title: 'name', key: 'id', value: 'id'}"
             :default-expand-all="true"
           >
           </a-tree>
         </a-col>
         <a-col :span="18">
+          <div :innerHTML="html"></div>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -33,6 +34,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const docs = ref();
+    const html = ref();
 
     /**
      * 一级文档树，children属性就是二级文档
@@ -65,12 +67,36 @@ export default defineComponent({
       });
     };
 
+    /**
+     * content查询
+     **/
+    const handleQueryContent = (id: number) => {
+      axios.get("doc/find-content/" + id).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          html.value = data.content;
+        }else {
+          message.error(data.message)
+        }
+      });
+    }
+
+    const onSelect = (selectKeys: any, info: any) => {
+      console.log('selected', selectKeys, info);
+      if (Tool.isNotEmpty(selectKeys)) {
+        //loading content, get the first key
+        handleQueryContent(selectKeys[0]);
+      }
+    }
+
     onMounted(() => {
       handleQuery();
     });
 
     return {
       level1,
+      html,
+      onSelect,
     }
   }
 });
