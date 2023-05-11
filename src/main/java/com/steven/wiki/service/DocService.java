@@ -122,4 +122,9 @@ public class DocService {
         contentMapper.deleteByExample(contentExample);
     }
 
+    public String findContent(Long id) {
+        var content = contentMapper.selectByPrimaryKey(id);
+        return content.getContent();
+    }
+
 }
