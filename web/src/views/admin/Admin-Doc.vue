@@ -140,6 +140,10 @@ export default defineComponent({
     param.value ={};
     const docs = ref(); //定义响应式数据变量，变化实时响应到界面
     const loading = ref(false);
+    // 因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
+    const treeSelectData = ref();
+    treeSelectData.value = [];
+
     const pagination = ref({
       current: 1,
       pageSize: 1000,
@@ -198,6 +202,11 @@ export default defineComponent({
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value,0);
           console.log("Tree Structure: ", level1);
+
+          //初始化parent chapter下拉栏
+          treeSelectData.value = Tool.copy(level1.value);
+          // 为选择树添加一个"无"
+          treeSelectData.value.unshift({id: 0, name: 'None'});
         }else {
           message.error(data.message)
         }
@@ -251,9 +260,7 @@ export default defineComponent({
 
 
     //---Doc Form-----
-    // 因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
-    const treeSelectData = ref();
-    treeSelectData.value = [];
+
 
     const doc = ref();
     doc.value = {};
