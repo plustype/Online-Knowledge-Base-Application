@@ -427,7 +427,7 @@ export default defineComponent({
 
     onMounted(() => {
       handleQuery();
-      editor.config.height = 450
+      editor.config.height = 400
       editor.create();
     });
 

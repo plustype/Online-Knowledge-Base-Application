@@ -17,7 +17,7 @@ This is an online knowledge base application where users can create their own ac
 - Statistic
     - Display view and like count
     - History statistic and forecast chart
-- More features will coming soon:
+- More features will be coming soon:
     - Log in validation
     - Times task
     - WebSocket web-site notice
@@ -60,9 +60,16 @@ Manage Category
 <br/>
 <br/>
 
-## Document Edit (under development)
+## Document Edit
 
-![5.png](5.png)
+![7.png](7.png)
+<br/>
+<br/>
+![9.png](9.png)
+
+## Document View
+
+![8.png](8.png)
 <br/>
 <br/>
 
