@@ -38,38 +38,38 @@ Some features are under development, will keep updating at here
 
 Find docs by category
 
-![1.png](1.png)
+![1.png](pic/1.png)
 <br/>
 <br/>
 
 Manage docs
 
-![2.png](2.png)
+![2.png](pic/2.png)
 <br/>
 <br/>
 
 Add/Edit Doc Info
 
-![3.png](3.png)
+![3.png](pic/3.png)
 <br/>
 <br/>
 
 Manage Category
 
-![4.png](4.png)
+![4.png](pic/4.png)
 <br/>
 <br/>
 
 ## Document Edit
 
-![7.png](7.png)
+![7.png](pic/7.png)
 <br/>
 <br/>
-![9.png](9.png)
+![9.png](pic/9.png)
 
 ## Document View
 
-![8.png](8.png)
+![8.png](pic/8.png)
 <br/>
 <br/>
 
