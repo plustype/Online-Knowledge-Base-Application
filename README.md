@@ -8,7 +8,7 @@ This project is still under development, will keep updating.
 
 This is an online knowledge base application where users can create their own accounts and manage their knowledge documents with a clear and easy-to-use interface. The main features include:
 
-### Features
+### Features (update test)
 
 - Account management, log in to enable more features
 - Documents
